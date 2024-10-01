@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    networks:
+      - music-service
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: "postgres"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+
+  service:
+    build:
+      context: .
+    restart: on-failure
+    networks:
+      - music-service
+    depends_on:
+      - postgres
+    ports:
+      - "3000:3000"
+
+networks:
+  music-service:
+    driver: bridge

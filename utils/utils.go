@@ -42,8 +42,8 @@ func ValidateEnvParams(user, password, host, port, database string) []string {
 func DumbSearchHook(group, song string) (*dto.SongExtraInfoResponse, error) {
 	msg := &dto.SongExtraInfoResponse{
 		Text:        "Hello,\n my dear friend!\n It is nice\n to see you!",
-		Link:        "link_example",
-		ReleaseDate: "24.12.2023",
+		Link:        "youtube",
+		ReleaseDate: "22.02.2024",
 	}
 
 	return msg, nil

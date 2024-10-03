@@ -60,12 +60,12 @@ func main() {
 
 	app := fiber.New()
 
-	app.Get("/hello", func(c *fiber.Ctx) error {
-		// Send a string response to the client
-		return c.SendString("Hello, World 👋!")
-	})
-	app.Post("/song", h.AddSong)
-	app.Put("/song/:song", h.UpdateSong)
+	app.Post("/songs/search", h.GetSongs)
+
+	app.Post("/songs", h.AddSong)
+	app.Put("/songs/:song", h.UpdateSong)
+	app.Delete("/songs/:song", h.DeleteSong)
+	app.Get("/songs/:song", h.GetSong)
 
 	app.Listen(":3000")
 }

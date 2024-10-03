@@ -10,6 +10,7 @@ import (
 	"github.com/AlexEr256/musicService/handlers"
 	"github.com/AlexEr256/musicService/repositories"
 	"github.com/AlexEr256/musicService/utils"
+	"github.com/gofiber/contrib/swagger"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
@@ -59,6 +60,14 @@ func main() {
 	h := handlers.NewSongHandler(r)
 
 	app := fiber.New()
+
+	cfg := swagger.Config{
+		BasePath: "/",
+		FilePath: "./docs/swagger_shop.json",
+		Path:     "docs",
+		Title:    "Swagger API Docs",
+	}
+	app.Use(swagger.New(cfg))
 
 	app.Post("/songs/search", h.GetSongs)
 

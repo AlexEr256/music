@@ -16,5 +16,6 @@ FROM alpine
 
 COPY --from=builder /usr/local/src/.env /
 COPY --from=builder /usr/local/src/migrations /migrations
+COPY --from=builder /usr/local/src/docs /docs
 COPY --from=builder /usr/local/src/bin/app /
 CMD ["/app"]

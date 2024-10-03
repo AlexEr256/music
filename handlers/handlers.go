@@ -139,7 +139,7 @@ func (h SongHandler) DeleteSong(c *fiber.Ctx) error {
 	err := h.SongRepository.Delete(song)
 
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(&dto.SongPostResponse{
+		return c.Status(fiber.StatusNotFound).JSON(&dto.SongPostResponse{
 			Success: false,
 			Message: fmt.Sprintf("failed to delete song - %s", err.Error()),
 		})
@@ -244,27 +244,26 @@ func (h SongHandler) GetSongs(c *fiber.Ctx) error {
 	if request.ReleaseDateFilter != nil {
 		if request.ReleaseDateFilter.End != "" {
 			end, err := fmtdate.Parse("DD.MM.YYYY", request.ReleaseDateFilter.End)
-			endDateFormatted := fmtdate.FormatDate(end)
 			if err != nil {
 				return c.Status(fiber.StatusBadRequest).JSON(&dto.SongPostResponse{
 					Success: false,
 					Message: fmt.Sprintf("failed to extract end date filter of the song - %s", err.Error()),
 				})
 			}
-
+			endDateFormatted := fmtdate.FormatDate(end)
 			endDate = endDateFormatted
 		}
 
 		if request.ReleaseDateFilter.Start != "" {
 			start, err := fmtdate.Parse("DD.MM.YYYY", request.ReleaseDateFilter.Start)
-			startDateFormatted := fmtdate.FormatDate(start)
+
 			if err != nil {
 				return c.Status(fiber.StatusBadRequest).JSON(&dto.SongPostResponse{
 					Success: false,
 					Message: fmt.Sprintf("failed to extract start date filter of the song - %s", err.Error()),
 				})
 			}
-
+			startDateFormatted := fmtdate.FormatDate(start)
 			startDate = startDateFormatted
 		}
 	}

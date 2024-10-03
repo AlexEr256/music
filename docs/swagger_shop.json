@@ -1,0 +1,454 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Music shop",
+    "description": "API for music shop",
+    "version": "1.0"
+  },
+  "host": "localhost:3000",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "paths": {
+    "/songs/search": {
+      "post": {
+        "description": "Returns info about song.",
+        "parameters": [
+          {
+            "name": "perPage",
+            "in": "query",
+            "description": "Entities per page.",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "page of couplet.",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "release": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "string",
+                      "example": "01.01.2024"
+                    },
+                    "end": {
+                      "type": "string",
+                      "example": "18.02.2024"
+                    }
+                  }
+                },
+                "text": {
+                  "type": "string"
+                },
+                "group": {
+                  "type": "string"
+                },
+                "link": {
+                  "type": "string"
+                },
+                "song": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "description for 200",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "songsInfo": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "song": {
+                        "type": "string",
+                        "example": "songName"
+                      },
+                      "group": {
+                        "type": "string",
+                        "example": "beetles"
+                      },
+                      "link": {
+                        "type": "string",
+                        "example": "https://youtube.com/vas21"
+                      },
+                      "releaseDate": {
+                        "type": "string",
+                        "example": "2024-01-24T00:00:00Z"
+                      },
+                      "verses": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "page": {
+                              "type": "integer",
+                              "example": 1
+                            },
+                            "verse": {
+                              "type": "string",
+                              "example": "Hello"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "totalPages": {
+                  "type": "integer",
+                  "example": 5
+                },
+                "success": {
+                  "type": "boolean"
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "description for 400",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "songInfo": {
+                  "type": "object"
+                },
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/songs/{song}": {
+      "get": {
+        "description": "Returns info about song.",
+        "parameters": [
+          {
+            "name": "song",
+            "in": "path",
+            "description": "Song name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "page of couplet.",
+            "required": false,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "description for 200",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "songInfo": {
+                  "type": "object",
+                  "properties": {
+                    "song": {
+                      "type": "string",
+                      "example": "songName"
+                    },
+                    "group": {
+                      "type": "string",
+                      "example": "beetles"
+                    },
+                    "link": {
+                      "type": "string",
+                      "example": "https://youtube.com/vas21"
+                    },
+                    "releaseDate": {
+                      "type": "string",
+                      "example": "2024-01-24T00:00:00Z"
+                    },
+                    "verses": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "page": {
+                            "type": "integer",
+                            "example": 1
+                          },
+                          "verse": {
+                            "type": "string",
+                            "example": "Hello"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "success": {
+                  "type": "boolean"
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "description for 400",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "songInfo": {
+                  "type": "object"
+                },
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "description for 404",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "songInfo": {
+                  "type": "object"
+                },
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "description": "Update song.",
+        "parameters": [
+          {
+            "name": "song",
+            "in": "path",
+            "description": "Song name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string"
+                },
+                "group": {
+                  "type": "string"
+                },
+                "link": {
+                  "type": "string"
+                },
+                "releaseDate": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "description for 200",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "description for 400",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "description for 404",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Delete song.",
+        "parameters": [
+          {
+            "name": "song",
+            "in": "path",
+            "description": "Song name.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "description for 200",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "description for 404",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/songs": {
+      "post": {
+        "description": "Create song.",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "song": {
+                  "type": "string"
+                },
+                "group": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "description for 200",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "description for 404",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "description for 500",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

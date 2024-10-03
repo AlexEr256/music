@@ -375,7 +375,7 @@ func (h SongHandler) GetSongs(c *fiber.Ctx) error {
 	h.Logger.Info("Extra info about request",
 		zap.Int("Total", total),
 		zap.Int("Offset", offset),
-		zap.Int("Offset", perPageValue),
+		zap.Int("PerPage", perPageValue),
 	)
 
 	return c.Status(fiber.StatusOK).JSON(&dto.SongGetManyResponse{

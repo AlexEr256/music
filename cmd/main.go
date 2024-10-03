@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"github.com/AlexEr256/musicService/database"
-	_ "github.com/AlexEr256/musicService/database"
 	"github.com/AlexEr256/musicService/handlers"
 	"github.com/AlexEr256/musicService/repositories"
 	"github.com/AlexEr256/musicService/utils"
@@ -16,6 +15,7 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/joho/godotenv"
+	"go.uber.org/zap"
 )
 
 func main() {
@@ -56,8 +56,11 @@ func main() {
 		log.Fatal("Failed to execute migrations ", err)
 	}
 
-	r := repositories.NewSongRepository(pg.Db)
-	h := handlers.NewSongHandler(r)
+	logger := zap.Must(zap.NewProduction())
+	defer logger.Sync()
+
+	r := repositories.NewSongRepository(pg.Db, logger)
+	h := handlers.NewSongHandler(r, logger)
 
 	app := fiber.New()
 

@@ -6,6 +6,7 @@ import (
 
 	"github.com/AlexEr256/musicService/dto"
 	"github.com/jmoiron/sqlx"
+	"go.uber.org/zap"
 )
 
 type ISongRepository interface {
@@ -17,11 +18,12 @@ type ISongRepository interface {
 }
 
 type SongRepository struct {
-	Db *sqlx.DB
+	Db     *sqlx.DB
+	Logger *zap.Logger
 }
 
-func NewSongRepository(db *sqlx.DB) ISongRepository {
-	return &SongRepository{Db: db}
+func NewSongRepository(db *sqlx.DB, logger *zap.Logger) ISongRepository {
+	return &SongRepository{Db: db, Logger: logger}
 }
 
 func (r SongRepository) Add(songRequest *dto.SongCompleteInfo) error {
@@ -32,7 +34,7 @@ func (r SongRepository) Add(songRequest *dto.SongCompleteInfo) error {
 
 	_, err := r.Db.NamedExec(query, songRequest)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to insert song - %w", err)
 	}
 
 	return nil
@@ -45,9 +47,8 @@ func (r SongRepository) Update(songRequest *dto.SongDbEntity) error {
 				song=$5`
 
 	_, err := r.Db.Query(query, songRequest.Song_Group, songRequest.Song_Text, songRequest.Link, songRequest.Release_Date, songRequest.Song)
-	fmt.Println(err)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to update song - %w", err)
 	}
 	return nil
 }
@@ -56,6 +57,7 @@ func (r SongRepository) Delete(song string) error {
 	query := `DELETE FROM songs
 	WHERE song=$1`
 
+	r.Logger.Info("Delete: ", zap.String("SQL query", query), zap.String("SQL Parameter", song))
 	result, err := r.Db.Exec(query, song)
 	if err != nil {
 		return err
@@ -63,12 +65,14 @@ func (r SongRepository) Delete(song string) error {
 
 	deletedRows, err := result.RowsAffected()
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to delete entity from db - %w", err)
 	}
 
 	if deletedRows == 0 {
 		return fmt.Errorf("no entities were deleted from database")
 	}
+
+	r.Logger.Info("Delete: ", zap.Int64("Affected rows", deletedRows))
 
 	return nil
 }
@@ -77,7 +81,7 @@ func (r SongRepository) GetOne(song string) (*dto.SongDbEntity, error) {
 	resp := dto.SongDbEntity{}
 	err := r.Db.Get(&resp, "SELECT * FROM songs WHERE song=$1", song)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to get info about song - %w", err)
 	}
 
 	return &resp, nil
@@ -94,7 +98,7 @@ func (r SongRepository) GetMany(startDate, endDate, link, song, group, text stri
 		finalStatement = sqlStatement + ";"
 	}
 
-	fmt.Println(finalStatement)
+	r.Logger.Info("SQL query - get many entities", zap.String("Statement", finalStatement))
 	rows, err := r.Db.Query(finalStatement)
 	if err != nil {
 		return nil, fmt.Errorf("failed to select songs - %w", err)

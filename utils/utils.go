@@ -71,6 +71,7 @@ func SearchHook(group, song string) (*dto.SongExtraInfoResponse, error) {
 	q.Add("song", song)
 	req.URL.RawQuery = q.Encode()
 
+	fmt.Println(req.URL)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create request with timeout - %w", err)
 	}
